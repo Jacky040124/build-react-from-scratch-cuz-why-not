@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>createElement Tests</title>
-</head>
-<body>
-    <h1>Check console for test results</h1>
+  </head>
+  <body>
+    <div id="root"></div>
     
-    <!-- Load implementation -->
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Load your implementation first -->
     <script src="src/createElement.js"></script>
+    <script src="src/concurrent.js"></script>
     <script src="src/render.js"></script>
     
+    <script type="text/babel">
+      // ==================================================[NOT RELEVANT TO OUR IMPLEMENTATION]
+      const Didact = {
+        createElement: createElement,
+        render: render
+      };
+      /** @jsx Didact.createElement */ 
+      // =================================================[NOT RELEVANT TO OUR IMPLEMENTATION]
+
+      // JSX ---Babel---> JS [const element = createElement("div", null, "Hello")]
+      const element = <div>Check console for test results</div>;
+      // Already JS
+      Didact.render(element, document.getElementById("root"));
+    </script>
+
     <!-- Load test runner -->
     <script src="test/test-runner.js"></script>
-    
+
     <!-- Load tests -->
     <script src="test/testCreateElement.js"></script>
-    <script src="test/testRender.js"></script>
-</body>
-</html> 
+    <script src="test/testConcurrentRender.js"></script>
+  </body>
+</html>

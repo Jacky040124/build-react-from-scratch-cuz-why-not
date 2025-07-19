@@ -91,6 +91,31 @@ the work scheduler
     - prioritizes urgent update (user input > animations > data fetching)
     - prevents blocking the main thread [makes react concurrent]
 
+### Root Structure
+The entire thing is a huge fiber that has sub fibers
+
+wipRoot = {
+    type: undefined,          // Root has no type (it's just a container)
+    dom: container,           // The actual DOM container element
+    props: {
+        children: [element],  // Array with your React element
+    },
+    parent: null,             // Root has no parent
+    child: firstChildFiber,   // First child fiber [sub fibers store here]
+    sibling: null,            // Root has no siblings
+}
+
+### Fiber Structure
+{
+    type: "div",           // Element type
+    props: {...},          // Element props
+    dom: null,             // DOM node (created during work)
+    parent: parentFiber,   // Tree navigation
+    child: childFiber,     // Tree navigation
+    sibling: siblingFiber  // Tree navigation
+}
+
+
 ## Event system
 - React doesn't attach event listeners to every element
     - it uses evetn delegation instead - one listener on the root element
@@ -129,3 +154,19 @@ the work scheduler
 # Building Blocks
 
 1. createElement: takes JSX elements and spits out virtual dom element, which will gets assemble into the tree
+2. render: takes virtual DOM node, turns it into actual DOM node and attach it to the actual DOM
+3.   module : work scheduler to prevent blocking execution
+    - Concept
+        - Traditional (Blocking): [Render Everything] → [User Input Blocked] → [Complete]
+        - Concurrent (Non-blocking): [Chunk 1] → [User Input] → [Chunk 2] → [User Input] → [Chunk 3] → [Complete]
+        - Scheduling: Browser Idle → Process Work Chunk → Check Time → Yield or Continue
+    - Implementation
+        -- **render()** triggers assign tasks tow workLoop
+        - **requestIdleCallback** monitors main stream, when free calls our callback function **workLoop()** with a deadline, during the time window workLoop would start to consume the task stack
+        - **workLoop()** 
+            - trigers **performWork()** to convert virtual DOM element to actual DOM element bit by bit, until deadline
+            - break the task down to small & unified blocks of work called **fiber**
+        - **performWork()**
+            - Fiberization : breaks the task down to small & unified blocks of work called **fiber**
+            - DOM Creating : create actual DOM structure for each virtual DOM element
+            - Next Fiber Seeking : recursively seek the next fiber to be process and return[priority: child > sibling > parent]

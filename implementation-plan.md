@@ -3,7 +3,7 @@
 ## 8 Steps to Build React
 
 **Step I**: `createElement()` - Transform JSX to virtual DOM objects ✅
-**Step II**: `render()` - Mount virtual DOM to real DOM  
+**Step II**: `render()` - Mount virtual DOM to real DOM  ✅
 **Step III**: Concurrent Mode - Break work into interruptible units
 **Step IV**: Fibers - Data structure for organizing work units
 **Step V**: Render/Commit Phases - Separate building from DOM updates

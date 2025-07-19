@@ -268,7 +268,7 @@ let nextUnitOfWork = null
 function workLoop(deadline) {
   let shouldYield = false
   while (nextUnitOfWork && !shouldYield) {
-    nextUnitOfWork = performUnitOfWork(
+    nextUnitOfWork = performUnitOfWork( 
       nextUnitOfWork
     )
     shouldYield = deadline.timeRemaining() < 1
