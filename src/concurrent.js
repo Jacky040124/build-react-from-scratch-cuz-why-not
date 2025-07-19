@@ -9,22 +9,22 @@
 //     sibling: siblingFiber  // Tree navigation
 // }
 
-let nextUnitOfWork = null;    // the next unit of work to be performed
-let wipRoot = null;           // working root [gets clear each commit]
-let currentRoot = null;       // root storage [gets updated each commit]
+window.nextUnitOfWork = null;    // the next unit of work to be performed
+window.wipRoot = null;           // working root [gets clear each commit]
+window.currentRoot = null;       // root storage [gets updated each commit]
 
 // workLoop is called with a deadline whenever the browser is free, works bit by bit during that deadline
 function workLoop(deadline) {
   let shouldYield = false;
 
   // work until no work or out or time
-  while (nextUnitOfWork && !shouldYield) {
-    nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+  while (window.nextUnitOfWork && !shouldYield) {
+    window.nextUnitOfWork = performUnitOfWork(window.nextUnitOfWork);
     shouldYield = deadline.timeRemaining() < 1;
   }
 
   // commits change each loop
-  if (!nextUnitOfWork && wipRoot) {
+  if (!window.nextUnitOfWork && window.wipRoot) {
     commitRoot();
   }
 
@@ -90,9 +90,9 @@ function performUnitOfWork(fiber) {
 
 // commit change to wipRoot -> update currentRoot -> clear wipRoot
 function commitRoot() {
-  commitWork(wipRoot.child);
-  currentRoot = wipRoot;
-  wipRoot = null;
+  commitWork(window.wipRoot.child);
+  window.currentRoot = window.wipRoot;
+  window.wipRoot = null;
 }
 
 // recursively sync work from wip root to current root
@@ -127,15 +127,11 @@ function createDom(fiber) {
     return dom
 }
 
-export { 
-    nextUnitOfWork, 
-    wipRoot, 
-    currentRoot,
-    workLoop, 
-    performUnitOfWork,
-    commitRoot,
-    commitWork,
-    createDom 
-}
+// Add functions to global scope
+window.workLoop = workLoop;
+window.performUnitOfWork = performUnitOfWork;
+window.commitRoot = commitRoot;
+window.commitWork = commitWork;
+window.createDom = createDom;
 
 

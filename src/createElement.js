@@ -37,3 +37,6 @@ function createTextElement(text) {
         }
     }
 }
+
+window.createElement = createElement;
+window.createTextElement = createTextElement;

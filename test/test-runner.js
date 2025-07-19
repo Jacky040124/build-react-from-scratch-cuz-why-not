@@ -30,6 +30,11 @@ function expect(actual) {
       if (actual.length !== length) {
         throw new Error(`Expected length ${length}, got ${actual.length}`)
       }
+    },
+    toBeLessThan(expected) {
+      if (actual >= expected) {
+        throw new Error(`Expected ${actual} to be less than ${expected}`)
+      }
     }
   }
 }

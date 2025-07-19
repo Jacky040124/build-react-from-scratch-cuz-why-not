@@ -1,15 +1,15 @@
-// Import from concurrent module
-import { nextUnitOfWork, wipRoot, currentRoot } from './concurrent.js'
-
-// Replace your current render function
 function render(element, container) {
-    wipRoot = {
+    window.wipRoot = {
         dom: container,
         props: {
             children: [element],
         },
     }
-    nextUnitOfWork = wipRoot
+    window.nextUnitOfWork = window.wipRoot
+    
+    // Start the work loop
+    requestIdleCallback(workLoop);
 }
 
-export { render }
+// Add to global scope
+window.render = render;
